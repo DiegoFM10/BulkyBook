@@ -1,0 +1,22 @@
+* {
+    padding: 0;
+}
+
+.right-container {
+    width: 45%;
+    display: inline-block;
+}
+
+.left-container {
+    width: 45%;
+    align-items: center;
+    list-style: decimal;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}

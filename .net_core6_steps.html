@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=".net_cote6_steps.css">
+    <title>.NET Core 6</title>
+</head>
+<body>
+    <div id="container" class="container">
+        
+        <h1 id="title" class="title">Anotaciones y Paso a Paso</h1>
+        <h2 id="subtitle" class="subtitle">Creación aplicación web con ASP.NET Core 6 MVC</h2>
+        
+        <div id="right-container" class="right-container">
+
+            <h4>En la estructura base de la solución se encontrarán los folders:</h4>
+            <div id="container-list" class="container-list">
+                <ul>
+                    <li>Properties: <span>En esta carpeta se aloja el archivo con las configuraciones y perfiles de inicio de la aplicación (launchSettings.json).</span></li>
+                    <li>wwwroot: <span>En esta carpeta se incluyen los archivos de recursos estaticos de la aplicación como archivos css, js, img, librerias entre otros.</span></li>
+                    <li>Controllers:</li>
+                    <li>Models:</li>
+                    <li>Views:
+                        <ul>
+                            <li>Shared: <span>Es usado para las vistas parciales, que contienen los templates de las vistas que se usaran.</span></li>
+                            <li>_ViewStart: <span>Es el archivo donde se ubica el nombre de la vista layout principal de la aplicación.</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <h4>Adicionalmente se encuentran predeterminados los archivos:</h4>
+            <div id="container-list" class="container-list">
+                <ul>
+                    <li>appSettings.json: <span>En esta carpeta se aloja el archivo con las configuraciones y perfiles de inicio de la aplicación (launchSettings.json).</span></li>
+                    <li>Program.cs: <span>En esta carpeta se incluyen los archivos de recursos estaticos de la aplicación como archivos css, js, img, librerias entre otros.</span></li>
+                    <li>Controllers:</li>
+                    <li>Models:</li>
+                    <li>appSettings.json:
+                        <ul>
+                            <li><span>En este archivo se incluyen todas las conexiones y llaves estaticas secretas que se vayan a usar en la aplicación.</span></li>
+                            <li><span>Se pueden agregar mas archivos Json para incluir conexiones y llaves que se usen en otros ambientes como por ejemplo uno de producción.</span></li>
+                            <li><span>*Los datos de los nuevos archivos quedan integrados automaticamente en el archivo global (appSettings.json).</span></li>
+                        </ul>
+                    </li>
+                    <li>Program.cs:
+                        <ul>
+                            <li><span>Es el archivo responsable de la ejecución de la aplicación.</span></li>
+                            <li><span>Se pueden inyectar dependencias dentro del bloque en que se encuentra el objeto builder.</span></li>
+                            <li><span>El Pipeline especifica cómo la aplicación puede responder a solicitudes web recibidas.</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <div id="container-info" class="container-info">
+                <h4>Tag Helpers:</h4>
+                <div id="container-list" class="container-list">
+                    <ul>
+                        <li><span>Son para el renderizado del lado del servidor.</span></li>
+                        <li><span>Están enfocados en los elementos de HTML para que su uso sea mas natural vs los HTML Helpers de versiones anteriores.</span></li>
+                    </ul>
+                </div>
+                <div id="container-html-helper" class="container-html-helper">
+                    <h5>HTML Helper</h5>
+                    <p>@Html.Label("FirstName", "FirstName : ", new {@class = "form-control"})</p>
+                </div>
+                <div id="container-tag-helper" class="container-tag-helper">
+                    <h5>Tag Helper</h5>
+                    <p>'<'label asp-for="FirstName" class="col-md-2 control-label'>'</Label'</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div id="notes-container" class="notes-container">
+                <p id="notes" class="notes">*La opción de Hot Reload permite que la página refresque los cambios en la página web automaticamente.</p>
+                <p id="notes" class="notes">**Validar seccion ActionResult()</p>
+            </div>
+
+        </div>
+
+        <div id="left-container" class="left-container">
+            <ol>
+                <li>Se crea el proyecto</li>
+                <li>Se cargan los paquetes nuget necesarios</li>
+                <li></li>
+            </ol>
+        </div>
+    </div>
+    
+</body>
+</html>
