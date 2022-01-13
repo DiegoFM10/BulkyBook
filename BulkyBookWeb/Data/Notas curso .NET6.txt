@@ -1,0 +1,93 @@
+ASP.NET Core MVC (.NET6) Course
+
+En la estructura base de la solución se encontrarán los folders:
+	
+	+ Properties: En esta carpeta se aloja el archivo con las configuraciones y perfiles de inicio de la aplicación (launchSettings.json).
+	+ wwwroot: En esta carpeta se incluyen los archivos de recursos estaticos de la aplicación como archivos css, js, img, librerias entre otros.
+	+ Controllers:
+	+ Models:
+	+ Views:
+		+Shared: Es usado para las vistas parciales, que contienen los templates de las vistas que se usaran.
+		-_ViewStart: Es el archivo donde se ubica el nombre de la vista layout principal de la aplicación.
+
+Adicionalmente se encuentran predeterminados los archivos:
+	-appSettings.json: En este archivo se incluyen todas las conexiones y llaves estaticas secretas que se vayan a usar en la aplicación.
+			Se pueden agregar mas archivos Json para incluir conexiones y llaves que se usen en otros ambientes como por ejemplo uno de producción.
+			*Los datos de los nuevos archivos quedan integrados automaticamente en el archivo global (appSettings.json).
+
+	-Program.cs: Es el archivo responsable de la ejecución de la aplicación.
+		Se pueden inyectar dependencias dentro del bloque en que se encuentra el objeto builder.
+		El Pipeline especifica cómo la aplicación puede responder a solicitudes web recibidas.
+
+**************************************************************************************
+* ********************************************************************************** *
+* *	    									   * *
+* *	Tag Helpers:								   * *
+* *		 								   * *
+* *		- Son para el renderizado del lado del servidor			   * *
+* *		- Están enfocados en los elementos de HTML para que su uso	   * *
+* *		  sea mas natural vs los HTML Helpers de versiones anteriores.	   * *
+* *										   * *
+* *    /*---------------------------- HTML Helper ----------------------------*/   * *
+* *	@Html.Label("FirstName", "FirstName : ", new {@class = "form-control"})	   * *
+* *    /*---------------------------- HTML Helper ----------------------------*/   * *
+* *										   * *
+* *    /*---------------------------- TAG Helper ----------------------------*/    * *
+* *	  <label asp-for="FirstName" class="col-md-2 control-label"></Label>	   * *
+* *    /*---------------------------- TAG Helper ----------------------------*/    * *
+* *										   * *
+* *										   * *
+* ********************************************************************************** *
+**************************************************************************************	
+
+Pasos para crear solución con enfoque Code First
+	1...
+	... Creación de modelos de tablas:
+		& Crear clases para los modelos de las tablas que se crearán en la DB
+		& Tener en cuenta agregar los data annotations que se requieran para los campos requeridos y el campo que se utilizará como llave primaria y columna de identidad.
+		& Si existe un campo que lleve un valor predeterminado, se puede generar en el modelo con la asignación del valor en la variable declarada.
+
+	. Configuración del DbCOntext:
+		& Como buena práctica se crea una carpeta "Data" en la que se incluyen las clases de configuración.
+		& Se crea la clase instanciando la clase padre DbContext
+			<!--public class ApplicationDbContext : DbContext-->
+		& Crear método constructor con los parametros que recibirá y configurar las opciones para que pasen a la clase base
+			<!--public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }-->
+		& Al finalizar la configuración se puede agregar en la clase el fragmento de código que creará la o las tablas en la base de datos con un DbSet.
+			<!--public DbSet<Category> Categories { get; set; }-->.
+
+	. Conexión de la solución con la base de datos:
+		& En el archivo appSettings.json se agrega el ConnectionString que lleva los datos de acceso a la BBDD
+			<!--"ConnectionStrings": {"DefaultConnection"= "Server:(localdb)\\MSSqlLocalDb;Database=Bulky;Trusted_Connection=True;"}-->
+		& En el archivo Program.cs se agrega el servicio antes de declarar el builder.Build().
+			<!--builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));-->.
+
+	. Crear la BBDD y la tabla o tablas usadas realizando las migraciones:
+		& En la consola de VS se corre el comando add-migration AddCategoryToDatabase //Category es el nombre de la tabla a migrar.
+		& Automaticamente se creará una carpeta (Migrations) con dos archivos: En uno se creara un archivo con los métodos Up(Es lo que se necesita que pase en la migración) y Down(Es por si algo sale mal, para poder revertir los cambios en la migración)
+		& En este punto, si todo fue exitoso, ya debe encontrarse la base de datos y tablas que se migraron en la BBDD.
+
+	. Creación del controlador:
+		& En "+Controllers" se agrega un nuevo controlador con el nombre de la tabla creada(como buena practica debe quedar con terminación Controller ej: CategoryController.cs)
+
+	. Creación de la vista:
+		& La vista se puede crear directamente desde el controlador dando click derecho en el metodo de IActionResult creado por defecto, o directamente en "+Views".
+		& Una vista parcial es la que se renderiza en una vista principal a manera de componente, por lo que no usaria un layout predeterminado.
+
+	. Ajuste del controlador que accede a la BBDD:
+		& Se crea una variable privada readonly que accedera a la clase en que manejamos el DbContext llamandola _db(como convención).
+		& En el controlador creado se genera un constructor de la clase, al que se le pasa como parametro la clase creada para el manejo del DbContext y la creación de la tabla en la base de datos para implementarla; igualando en él la variable creada en el paso anterior(_db), con el parámetro creado en el constructor.
+		& Dentro del método IActionResult, creamos una variable en la cual llamaremos la acción que queremos realizar sobre la base de datos (ej. {var objCategoryList = _db.Categories.ToList();} si se desea usar un tipado más fuerte, el código cambiaria por {IEnumerable<Category> objCategoryList = _db.Categories;})//En este ejemplo se busca converitr las categorías en una lista sin requerir de sintaxis SQL para realizarlo.
+		& Se incluye la variable como parámetro que recibe la vista para que pueda mostrar la información en la página {return View(objCategoryList);}
+
+	. Ajustando las vistas para traer los datos que consulta el controlador:
+		& Se captura el modelo que se está pasando desde el controlador con notación razor, pasandole el tipo de dato que se está pasando desde el ActionMethod  (ej: {@model IEnumerable<Category>}).
+		& Se agregan los elementos HTML o el código en c#, que se requieran en la vista para mostrar o solicitar los datos necesarios al usuario.
+
+	. Agregando opciones de CRUD:
+
+*La opción de Hot Reload permite que la página refresque los cambios en la página web automaticamente.
+
+** @ es signo de activación
+** => es igual a go to
+**Validar seccion ActionResult()			
