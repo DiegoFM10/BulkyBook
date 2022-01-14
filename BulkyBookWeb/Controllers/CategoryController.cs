@@ -12,11 +12,16 @@ namespace BulkyBookWeb.Controllers
         {
             _db = db;
         }
+
+        #region List
         public IActionResult Index()
         {
             IEnumerable<Category> objCategoryList = _db.Categories;
             return View(objCategoryList);
         }
+        #endregion
+
+        #region Create
         //GET
         public IActionResult Create()
         {
@@ -40,5 +45,31 @@ namespace BulkyBookWeb.Controllers
            }
            return View(obj);
         }
+        #endregion
+
+        #region Edit
+        //GET
+        public IActionResult Edit()
+        {
+            return View();
+        }
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category obj)
+        {
+           if (ModelState.IsValid)
+            {
+                _db.Categories.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+        #endregion
+
+        #region Delete
+
+        #endregion
     }
 }
