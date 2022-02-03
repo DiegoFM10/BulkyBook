@@ -41,6 +41,7 @@ namespace BulkyBookWeb.Controllers
             { 
                 _db.Categories.Add(obj);
                 _db.SaveChanges();
+                TempData["Success"] = "Category created successfully";
                 return RedirectToAction("Index");
            }
            return View(obj);
@@ -49,19 +50,41 @@ namespace BulkyBookWeb.Controllers
 
         #region Edit
         //GET
-        public IActionResult Edit()
+        public IActionResult Edit(int? id)
         {
-            return View();
+            if(id==null || id == 0)
+            {
+                return NotFound();
+            }
+            var categoryFromDb = _db.Categories.Find(id);
+
+            //Otras formas de traer los datos del elemento
+            //var categoryFromDbFirst = _db.Categories.FirstOrDefault(x => x.Id == id); 
+            //var categoryFromDbSingle = _db.Categories.SingleOrDefault(x => x.Id == id);
+
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
         }
+
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Category obj)
         {
-           if (ModelState.IsValid)
+            if (obj.Name == obj.DisplayOrder.ToString())
             {
-                _db.Categories.Add(obj);
+                ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _db.Categories.Update(obj);
                 _db.SaveChanges();
+                TempData["Success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -69,7 +92,40 @@ namespace BulkyBookWeb.Controllers
         #endregion
 
         #region Delete
+        //GET
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var categoryFromDb = _db.Categories.Find(id);
 
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
+        }
+
+        //POST
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePOST(int? id)
+        {
+            var obj = _db.Categories.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            TempData["Success"] = "Category deleted successfully";
+            return RedirectToAction("Index");
+    
+        }
         #endregion
     }
 }
